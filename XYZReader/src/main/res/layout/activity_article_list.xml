@@ -3,30 +3,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     >
 
     <android.support.design.widget.AppBarLayout
         android:layout_height="168dp"
         android:layout_width="match_parent"
         android:theme="@style/AppTheme"
+        android:fitsSystemWindows="true"
         >
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:expandedTitleMarginStart="72dp"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:fitsSystemWindows="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:layout_gravity="bottom">
+            android:layout_gravity="bottom"
+            android:fitsSystemWindows="true">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -35,7 +35,8 @@
                 android:contentDescription="@string/app_name"
                 android:layout_gravity="center_horizontal"
                 android:adjustViewBounds="true"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"/>
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:fitsSystemWindows="true"/>
 
         </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
