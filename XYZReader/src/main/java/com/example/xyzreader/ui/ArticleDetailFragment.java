@@ -18,12 +18,17 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -212,14 +217,20 @@ public class ArticleDetailFragment extends Fragment implements
             mRootView.animate().alpha(1);
             //titleView.setText(mCursor.getString(ArticleLoader.Query.TITLE));
             collapsingToolbarLayout.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
-            bylineView.setText(Html.fromHtml(
-                    DateUtils.getRelativeTimeSpanString(
-                            mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
-                            System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
-                            DateUtils.FORMAT_ABBREV_ALL).toString()
-                            + " by <font color='#ffffff'>"
-                            + mCursor.getString(ArticleLoader.Query.AUTHOR)
-                            + "</font>"));
+
+            String date = DateUtils.getRelativeTimeSpanString(
+                    mCursor.getLong(ArticleLoader.Query.PUBLISHED_DATE),
+                    System.currentTimeMillis(), DateUtils.HOUR_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_ALL).toString() + " by ";
+            String author = " " + mCursor.getString(ArticleLoader.Query.AUTHOR);
+            String bylineText = date + author;
+            Spannable spannable = new SpannableString(bylineText);
+            TypedValue typedValue = new TypedValue();
+            getActivity().getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
+            int primaryDark = typedValue.data;
+            //int primaryDark = ContextCompat.getColor(getActivity(), R.color.bluegrey_800);
+            spannable.setSpan(new ForegroundColorSpan(primaryDark), date.length(), (date+author).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            bylineView.setText(spannable, TextView.BufferType.SPANNABLE);
             bodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY)));
 
 

@@ -29,6 +29,11 @@
     <color name="green_100">#C8E6C9</color>
     <color name="orange_A200">#FF9100</color>
 
+    <color name="bluegrey_500">#607D8B</color>
+    <color name="bluegrey_800">#37474F</color>
+    <color name="bluegrey_200">#B0BEC5</color>
+    <color name="deeporange_A400">#FF3D00</color>
+
     <color name="translucent_scrim_bottom">#10000000</color>
 
 </resources>

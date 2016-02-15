@@ -25,7 +25,6 @@
             app:expandedTitleMarginEnd="64dp"
             android:fitsSystemWindows="true"
             app:title="test test"
-            app:statusBarScrim="@color/ltgray"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline"
 
             >
@@ -80,15 +79,13 @@
                 style="?android:attr/textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#8fff"
+                android:textColor="@color/deeporange_A400"
                 android:text="testing byline"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 android:layout_gravity="bottom"
                 android:paddingLeft="48dp"
                 android:paddingBottom="4dp"
                 android:paddingTop="4dp"
-
-                android:background="?attr/colorPrimary"
                 />
 
 
