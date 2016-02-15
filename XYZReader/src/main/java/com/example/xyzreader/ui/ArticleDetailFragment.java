@@ -21,6 +21,7 @@ import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -68,6 +69,8 @@ public class ArticleDetailFragment extends Fragment implements
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
+
+    Toolbar mToolbarView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -142,6 +145,11 @@ public class ArticleDetailFragment extends Fragment implements
         //mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
+        mToolbarView = (Toolbar) mRootView.findViewById(R.id.main_toolbar);
+        AppCompatActivity activity = (AppCompatActivity)getActivity();
+        activity.setSupportActionBar(mToolbarView);
+        activity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -297,6 +305,10 @@ public class ArticleDetailFragment extends Fragment implements
             if (cursor != null) {
                 cursor.close();
             }
+
+
+
+
             return;
         }
 
