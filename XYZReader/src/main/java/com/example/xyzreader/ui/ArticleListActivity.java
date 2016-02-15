@@ -1,8 +1,10 @@
 package com.example.xyzreader.ui;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.app.LoaderManager;
+import android.app.SharedElementCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
@@ -31,12 +34,16 @@ import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * An activity representing a list of Articles. This activity has different presentations for
  * handset and tablet-size devices. On handsets, the activity presents a list of items, which when
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -48,12 +55,58 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private Activity mActivity;
 
-    @Override
+    private Bundle mReenterState;
+    static final String EXTRA_START_POSITION = "extra_start_position";
+    static final String EXTRA_CURRENT_POSITION = "extra_current_position";
+
+    static final String SHARED_ELEMENT_TRANSTION_PREFIX = "image_";
+
+    private final SharedElementCallback mCallback = new SharedElementCallback() {
+        @Override
+        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            if (mReenterState != null) {
+                int startPosition = mReenterState.getInt(EXTRA_START_POSITION);
+                int currentPosition = mReenterState.getInt(EXTRA_CURRENT_POSITION);
+                if (startPosition != currentPosition) {
+                    String newTransitionName = SHARED_ELEMENT_TRANSTION_PREFIX + currentPosition;
+                    View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
+                    if (newSharedElement != null) {
+                        names.clear();
+                        names.add(newTransitionName);
+                        sharedElements.clear();
+                        sharedElements.put(newTransitionName, newSharedElement);
+                    }
+                    mReenterState = null;
+                }
+                else {
+                    // If mTmpReenterState is null, then the activity is exiting.
+                    View navigationBar = findViewById(android.R.id.navigationBarBackground);
+                    View statusBar = findViewById(android.R.id.statusBarBackground);
+                    if (navigationBar != null) {
+                        names.add(navigationBar.getTransitionName());
+                        sharedElements.put(navigationBar.getTransitionName(), navigationBar);
+                    }
+                    if (statusBar != null) {
+                        names.add(statusBar.getTransitionName());
+                        sharedElements.put(statusBar.getTransitionName(), statusBar);
+                    }
+                }
+
+            }
+        }
+
+    };
+
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
 
         mActivity = this;
+
+        setExitSharedElementCallback(mCallback);
+
 
         // TODO - Probably want to do something like this in the detail activity, except enabled = true
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -71,6 +124,28 @@ public class ArticleListActivity extends AppCompatActivity implements
         if (savedInstanceState == null) {
             refresh();
         }
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        super.onActivityReenter(resultCode, data);
+
+        mReenterState = data.getExtras();
+        int currentPosition = mReenterState.getInt(EXTRA_CURRENT_POSITION);
+        int startPosition = mReenterState.getInt(EXTRA_START_POSITION);
+        if (startPosition != currentPosition) {
+            mRecyclerView.scrollToPosition(currentPosition);
+        }
+        supportPostponeEnterTransition();
+        mRecyclerView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            @Override
+            public boolean onPreDraw() {
+                mRecyclerView.getViewTreeObserver().removeOnPreDrawListener(this);
+                mRecyclerView.requestLayout();
+                supportStartPostponedEnterTransition();
+                return true;
+            }
+        });
     }
 
     private void refresh() {
@@ -173,6 +248,10 @@ public class ArticleListActivity extends AppCompatActivity implements
                     mCursor.getString(ArticleLoader.Query.THUMB_URL),
                     ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                holder.thumbnailView.setTransitionName(SHARED_ELEMENT_TRANSTION_PREFIX + position);
+                holder.thumbnailView.setTag(SHARED_ELEMENT_TRANSTION_PREFIX + position);
+            }
         }
 
         @Override
