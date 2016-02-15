@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:id="@+id/coordinator_detail"
+    android:transitionGroup="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/main.appbar"
@@ -19,11 +21,13 @@
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginStart="48dp"
+            app:expandedTitleMarginStart="32dp"
             app:expandedTitleMarginEnd="64dp"
             android:fitsSystemWindows="true"
             app:title="test test"
             app:statusBarScrim="@color/ltgray"
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline"
+
             >
             <com.example.xyzreader.ui.DynamicHeightNetworkImageView
                 android:id="@+id/photo"
@@ -31,17 +35,18 @@
                 android:layout_height="match_parent"
                 android:background="@color/photo_placeholder"
                 app:layout_collapseMode="parallax"
-                android:fitsSystemWindows="true"/>
+                android:fitsSystemWindows="true"
+                android:transitionName="@string/transition_photo"/>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
                 android:layout_gravity="bottom"
-                android:layout_alignBottom="@+id/article_byline"
+                android:layout_alignBottom="@+id/main.toolbar"
                 android:background="@drawable/scrim"/>
 
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/main.toolbar"
+                android:id="@id/main.toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -49,18 +54,7 @@
                 android:fitsSystemWindows="true"
 
                 />
-            <TextView
-                android:id="@id/article_byline"
-                style="?android:attr/textAppearanceSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#8fff"
-                android:text="testing byline"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="48dp"
-                android:layout_marginBottom="4dp"
-                />
+
 
             <!--suppress AndroidLintContentDescription -->
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -73,12 +67,29 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:fitsSystemWindows="true"
+        android:transitionGroup="true"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/article_byline"
+                style="?android:attr/textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#8fff"
+                android:text="testing byline"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                android:layout_gravity="bottom"
+                android:paddingLeft="48dp"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+
+                android:background="?attr/colorPrimary"
+                />
 
 
             <com.example.xyzreader.ui.MaxWidthLinearLayout
