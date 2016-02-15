@@ -43,7 +43,6 @@ import java.util.Map;
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -60,6 +59,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     static final String EXTRA_CURRENT_POSITION = "extra_current_position";
 
     static final String SHARED_ELEMENT_TRANSTION_PREFIX = "image_";
+
+    private int mPosition;
 
     private final SharedElementCallback mCallback = new SharedElementCallback() {
         @Override
@@ -224,8 +225,10 @@ public class ArticleListActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(View view) {
                         Log.d(TAG, "Running transition with bundle");
-                        startActivity(new Intent(Intent.ACTION_VIEW,
-                                ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))), bundle);
+                        Intent intent = new Intent(Intent.ACTION_VIEW,ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
+                        intent.putExtra(EXTRA_START_POSITION, mPosition);
+
+                        startActivity(intent, bundle);
                     }
                 });
             return vh;
@@ -252,6 +255,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 holder.thumbnailView.setTransitionName(SHARED_ELEMENT_TRANSTION_PREFIX + position);
                 holder.thumbnailView.setTag(SHARED_ELEMENT_TRANSTION_PREFIX + position);
             }
+            mPosition = position;
         }
 
         @Override

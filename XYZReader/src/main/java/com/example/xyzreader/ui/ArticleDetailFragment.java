@@ -12,6 +12,8 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.ActivityCompat;
@@ -149,6 +151,18 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
         //updateStatusBar();
         return mRootView;
+    }
+    @Nullable
+    ImageView getImageView() {
+        if (isViewInBounds(getActivity().getWindow().getDecorView(), mPhotoView)) {
+            return mPhotoView;
+        }
+        return null;
+    }
+    private static boolean isViewInBounds(@NonNull View container, @NonNull View view) {
+        Rect containerBounds = new Rect();
+        container.getHitRect(containerBounds);
+        return view.getLocalVisibleRect(containerBounds);
     }
 
 //    private void updateStatusBar() {
