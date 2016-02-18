@@ -6,6 +6,5 @@
         <item name="colorPrimaryDark">@color/bluegrey_800</item>
         <item name="colorAccent">@color/deeporange_A400</item>
 
-        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 </resources>

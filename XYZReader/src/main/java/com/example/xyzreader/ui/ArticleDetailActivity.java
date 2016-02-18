@@ -39,6 +39,7 @@ import static com.example.xyzreader.ui.ArticleListActivity.EXTRA_CURRENT_POSITIO
  * An activity representing a single Article detail screen, letting you swipe between articles.
  */
 
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ArticleDetailActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 

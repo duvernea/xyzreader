@@ -43,6 +43,7 @@ import java.util.Map;
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
+@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
