@@ -7,7 +7,7 @@
     >
 
     <android.support.design.widget.AppBarLayout
-        android:layout_height="168dp"
+        android:layout_height="@dimen/article_list_appbar_height"
         android:layout_width="match_parent"
         android:theme="@style/AppTheme"
         android:fitsSystemWindows="true"
@@ -56,10 +56,10 @@
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:scrollbarStyle="outsideOverlay"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/article_list_recyclerView_marginTop"
             android:paddingLeft="@dimen/list_side_margin"
             android:paddingRight="@dimen/list_side_margin"
-            android:paddingBottom="28dp" />
+            android:paddingBottom="@dimen/article_list_recyclerView_paddingBottom" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -8,4 +8,18 @@
     <dimen name="fab_press_translation_z">6dp</dimen>
     <dimen name="fab_margin">24dp</dimen>
 
+    <dimen name="detail_image_scrim_height">220dp</dimen>
+    <dimen name="margin_title_byline">48dp</dimen>
+
+    <dimen name="margin_title_end">64dp</dimen>
+    <dimen name="detail_body_margin_top">8dp</dimen>
+    <dimen name="detail_body_elevation">2dp</dimen>
+    <dimen name="padding_bottom_title_byline">4dp</dimen>
+    <dimen name="padding_top_title_byline">8dp</dimen>
+
+    <!-- main article list -->
+    <dimen name="article_list_appbar_height">168dp</dimen>
+    <dimen name="article_list_recyclerView_marginTop">8dp</dimen>
+    <dimen name="article_list_recyclerView_paddingBottom">28dp</dimen>
+
 </resources>
