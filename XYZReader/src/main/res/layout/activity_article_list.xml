@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
-            app:theme="@style/ToolbarTheme">
+           >
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -28,7 +28,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:layout_gravity="bottom"
             android:fitsSystemWindows="true"
-            app:theme="@style/ToolbarTheme">
+            >
 
             <ImageView
                 android:layout_width="match_parent"

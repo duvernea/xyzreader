@@ -221,10 +221,12 @@ public class ArticleListActivity extends AppCompatActivity implements
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
             final ViewHolder vh = new ViewHolder(view);
-                final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
+                Log.d(TAG, "onCreateViewHolder makeSceneTransitionAnim");
+                //final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
                         Log.d(TAG, "Running transition with bundle");
                         Intent intent = new Intent(Intent.ACTION_VIEW,ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
                         intent.putExtra(EXTRA_START_POSITION, mPosition);
@@ -254,6 +256,7 @@ public class ArticleListActivity extends AppCompatActivity implements
             holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.thumbnailView.setTransitionName(SHARED_ELEMENT_TRANSTION_PREFIX + position);
+                Log.d(TAG, holder.thumbnailView.getTransitionName());
                 holder.thumbnailView.setTag(SHARED_ELEMENT_TRANSTION_PREFIX + position);
             }
             mPosition = position;
