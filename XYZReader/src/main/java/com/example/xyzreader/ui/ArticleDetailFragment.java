@@ -52,6 +52,10 @@ public class ArticleDetailFragment extends Fragment implements
     private static final String TAG = "ArticleDetailFragment";
 
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_POSITION = "item_position";
+    public static final String ARG_STARTING_POSITION = "item_starting_position";
+
+
     private static final float PARALLAX_FACTOR = 1.25f;
 
     private Cursor mCursor;
@@ -70,6 +74,9 @@ public class ArticleDetailFragment extends Fragment implements
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
 
+    private int mStartingPosition;
+    private int mPosition;
+
     Toolbar mToolbarView;
 
     /**
@@ -79,14 +86,15 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId) {
+    public static ArticleDetailFragment newInstance(long itemId, int position, int startingPosition) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
+        arguments.putInt(ARG_POSITION, position);
+        arguments.putInt(ARG_STARTING_POSITION, startingPosition);
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,6 +108,12 @@ public class ArticleDetailFragment extends Fragment implements
         mStatusBarFullOpacityBottom = getResources().getDimensionPixelSize(
                 R.dimen.detail_card_top_margin);
         setHasOptionsMenu(true);
+
+        mStartingPosition = getArguments().getInt(ARG_STARTING_POSITION);
+        mPosition = getArguments().getInt(ARG_POSITION);
+        //mIsTransitioning = savedInstanceState == null && mStartingPosition == mPosition;
+        //mBackgroundImageFadeMillis = getResources().getInteger(
+        //        R.integer.fragment_details_background_image_fade_millis);
     }
 
     public ArticleDetailActivity getActivityCast() {
@@ -121,27 +135,9 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        //mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
-                //mRootView.findViewById(R.id.draw_insets_frame_layout);
-//        mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
-//            @Override
-//            public void onInsetsChanged(Rect insets) {
-//                mTopInset = insets.top;
-//            }
-//        });
-
-//        mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
-//        mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
-//            @Override
-//            public void onScrollChanged() {
-//                mScrollY = mScrollView.getScrollY();
-//                getActivityCast().onUpButtonFloorChanged(mItemId, ArticleDetailFragment.this);
-//                mPhotoContainerView.setTranslationY((int) (mScrollY - mScrollY / PARALLAX_FACTOR));
-//                updateStatusBar();
-//            }
-//        });
 
         mPhotoView = (DynamicHeightNetworkImageView) mRootView.findViewById(R.id.photo);
+        mPhotoView.setTransitionName(ArticleListActivity.SHARED_ELEMENT_TRANSTION_PREFIX + mPosition);
         //mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
@@ -258,6 +254,7 @@ public class ArticleDetailFragment extends Fragment implements
                             //getActivity().supportStartPostponedEnterTransition();
                             activity.supportStartPostponedEnterTransition();
 
+                            Log.d(TAG, "Starting Postponed transition");
                             return true;
                         }
                     }

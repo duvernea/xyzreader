@@ -223,9 +223,11 @@ public class ArticleListActivity extends AppCompatActivity implements
             final ViewHolder vh = new ViewHolder(view);
                 Log.d(TAG, "onCreateViewHolder makeSceneTransitionAnim");
                 //final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
-                view.setOnClickListener(new View.OnClickListener() {
+
+            view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        mPosition = vh.getAdapterPosition();
                         Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
                         Log.d(TAG, "Running transition with bundle");
                         Intent intent = new Intent(Intent.ACTION_VIEW,ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
@@ -236,6 +238,7 @@ public class ArticleListActivity extends AppCompatActivity implements
                 });
             return vh;
         }
+
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {

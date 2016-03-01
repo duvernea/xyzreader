@@ -68,6 +68,8 @@ public class ArticleDetailActivity extends AppCompatActivity
     private final SharedElementCallback mCallback = new SharedElementCallback() {
         @Override
         public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+            Log.d(TAG, "onMapSharedElements callback");
+            Log.d(TAG, "mIsReturning = " + mIsReturning);
             if (mIsReturning) {
                 Log.d(TAG, "isReturning");
                 ImageView sharedElement = mArticleDetailFragment.getImageView();
@@ -101,6 +103,7 @@ public class ArticleDetailActivity extends AppCompatActivity
         setContentView(R.layout.activity_article_detail);
 
         mStartPosition = getIntent().getIntExtra(EXTRA_START_POSITION, 0);
+                Log.d(TAG, "mStartPosition: " + mStartPosition);
         if (savedInstanceState == null) {
             mCurrentPosition = mStartPosition;
         } else {
@@ -261,7 +264,10 @@ public class ArticleDetailActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             mCursor.moveToPosition(position);
-            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID));
+
+            Log.d(TAG, "getItem, position:, " + position);
+            Log.d(TAG, "itemID for fragment: " + mCursor.getLong(ArticleLoader.Query._ID));
+            return ArticleDetailFragment.newInstance(mCursor.getLong(ArticleLoader.Query._ID),position, mStartPosition );
         }
 
         @Override
