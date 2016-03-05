@@ -67,62 +67,50 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private Context mContext;
 
-
         @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-
-            mContext = this;
-
         mActivity = this;
-            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
-        mCallback = new SharedElementCallback() {
-                @Override
-                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                    if (mReenterState != null) {
-                        int startPosition = mReenterState.getInt(EXTRA_START_POSITION);
-                        int currentPosition = mReenterState.getInt(EXTRA_CURRENT_POSITION);
-                        if (startPosition != currentPosition) {
-                            String newTransitionName = SHARED_ELEMENT_TRANSTION_PREFIX + currentPosition;
-                            View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
-                            if (newSharedElement != null) {
-                                names.clear();
-                                names.add(newTransitionName);
-                                sharedElements.clear();
-                                sharedElements.put(newTransitionName, newSharedElement);
-                            }
-                            mReenterState = null;
-                        }
-                        else {
-                            // If mTmpReenterState is null, then the activity is exiting.
-                            View navigationBar = findViewById(android.R.id.navigationBarBackground);
-                            View statusBar = findViewById(android.R.id.statusBarBackground);
-                            if (navigationBar != null) {
-                                names.add(navigationBar.getTransitionName());
-                                sharedElements.put(navigationBar.getTransitionName(), navigationBar);
-                            }
-                            if (statusBar != null) {
-                                names.add(statusBar.getTransitionName());
-                                sharedElements.put(statusBar.getTransitionName(), statusBar);
-                            }
-                        }
 
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+            mCallback = new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                if (mReenterState != null) {
+                    int startPosition = mReenterState.getInt(EXTRA_START_POSITION);
+                    int currentPosition = mReenterState.getInt(EXTRA_CURRENT_POSITION);
+                    if (startPosition != currentPosition) {
+                        String newTransitionName = SHARED_ELEMENT_TRANSTION_PREFIX + currentPosition;
+                        View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
+                        if (newSharedElement != null) {
+                            names.clear();
+                            names.add(newTransitionName);
+                            sharedElements.clear();
+                            sharedElements.put(newTransitionName, newSharedElement);
+                        }
+                        mReenterState = null;
+                    }
+                    else {
+                        // If mTmpReenterState is null, then the activity is exiting.
+                        View navigationBar = findViewById(android.R.id.navigationBarBackground);
+                        View statusBar = findViewById(android.R.id.statusBarBackground);
+                        if (navigationBar != null) {
+                            names.add(navigationBar.getTransitionName());
+                            sharedElements.put(navigationBar.getTransitionName(), navigationBar);
+                        }
+                        if (statusBar != null) {
+                            names.add(statusBar.getTransitionName());
+                            sharedElements.put(statusBar.getTransitionName(), statusBar);
+                        }
                     }
                 }
-            };
-                setExitSharedElementCallback(mCallback);
-
-            };
-
-
-
-        // TODO - Probably want to do something like this in the detail activity, except enabled = true
+            }};
+            setExitSharedElementCallback(mCallback);
+        };
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         // setSupportActionBar(mToolbar);
         // getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-
         // final View toolbarContainerView = findViewById(R.id.toolbar_container);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
@@ -162,9 +150,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             }
         });
     }
-
-
-
     private void refresh() {
         Log.d(TAG, "refresh called");
         startService(new Intent(this, UpdaterService.class));
@@ -190,7 +175,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(TAG, "onReceive, broadcast receiver");
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
             } else if (UpdaterService.BROADCAST_NO_NETWORK.equals(intent.getAction())) {
@@ -243,9 +227,6 @@ public class ArticleListActivity extends AppCompatActivity implements
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = getLayoutInflater().inflate(R.layout.list_item_article, parent, false);
             final ViewHolder vh = new ViewHolder(view);
-                Log.d(TAG, "onCreateViewHolder makeSceneTransitionAnim");
-                //final Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
-
             view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -255,18 +236,14 @@ public class ArticleListActivity extends AppCompatActivity implements
                         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
                             Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
                             startActivity(intent, bundle);
-                            Log.d(TAG, "Running transition with bundle");
                         }
                         else {
                             startActivity(intent);
                         }
-
                     }
                 });
             return vh;
         }
-
-
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             // add shared element transition if lollipop installed

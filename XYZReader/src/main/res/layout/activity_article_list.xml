@@ -18,8 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            android:fitsSystemWindows="true"
-           >
+            android:fitsSystemWindows="true">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -27,8 +26,7 @@
             android:layout_height="?actionBarSize"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:layout_gravity="bottom"
-            android:fitsSystemWindows="true"
-            >
+            android:fitsSystemWindows="true">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -49,8 +47,7 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"

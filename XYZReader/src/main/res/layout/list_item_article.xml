@@ -20,8 +20,7 @@
             android:id="@+id/thumbnail"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:background="@color/photo_placeholder"
-            android:transitionName="@string/transition_photo"/>
+            android:background="@color/photo_placeholder" />
 
         <TextView
             android:id="@+id/article_title"
