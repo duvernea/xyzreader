@@ -173,8 +173,10 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        registerReceiver(mRefreshingReceiver,
-                new IntentFilter(UpdaterService.BROADCAST_ACTION_STATE_CHANGE));
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UpdaterService.BROADCAST_ACTION_STATE_CHANGE);
+        intentFilter.addAction(UpdaterService.BROADCAST_NO_NETWORK);
+        registerReceiver(mRefreshingReceiver, intentFilter);
     }
 
     @Override
@@ -191,10 +193,11 @@ public class ArticleListActivity extends AppCompatActivity implements
             Log.d(TAG, "onReceive, broadcast receiver");
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
-                updateRefreshingUI();
             } else if (UpdaterService.BROADCAST_NO_NETWORK.equals(intent.getAction())) {
-                Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
+                mIsRefreshing = false;
+                Toast.makeText(mContext, getResources().getString(R.string.no_network_msg), Toast.LENGTH_SHORT).show();
             }
+            updateRefreshingUI();
         }
     };
 

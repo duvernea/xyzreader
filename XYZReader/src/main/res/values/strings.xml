@@ -11,4 +11,6 @@
 
     <string name="transition_photo">transition_photo</string>
 
+    <string name ="no_network_msg">Not Connected to Network. Could not update article list.</string>
+
 </resources>
