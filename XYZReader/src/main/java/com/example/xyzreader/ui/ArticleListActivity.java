@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
@@ -43,7 +44,6 @@ import java.util.Map;
  * touched, lead to a {@link ArticleDetailActivity} representing item details. On tablets, the
  * activity presents a grid of items as cards.
  */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -63,41 +63,9 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private int mPosition;
 
-    private final SharedElementCallback mCallback = new SharedElementCallback() {
-        @Override
-        public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-            if (mReenterState != null) {
-                int startPosition = mReenterState.getInt(EXTRA_START_POSITION);
-                int currentPosition = mReenterState.getInt(EXTRA_CURRENT_POSITION);
-                if (startPosition != currentPosition) {
-                    String newTransitionName = SHARED_ELEMENT_TRANSTION_PREFIX + currentPosition;
-                    View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
-                    if (newSharedElement != null) {
-                        names.clear();
-                        names.add(newTransitionName);
-                        sharedElements.clear();
-                        sharedElements.put(newTransitionName, newSharedElement);
-                    }
-                    mReenterState = null;
-                }
-                else {
-                    // If mTmpReenterState is null, then the activity is exiting.
-                    View navigationBar = findViewById(android.R.id.navigationBarBackground);
-                    View statusBar = findViewById(android.R.id.statusBarBackground);
-                    if (navigationBar != null) {
-                        names.add(navigationBar.getTransitionName());
-                        sharedElements.put(navigationBar.getTransitionName(), navigationBar);
-                    }
-                    if (statusBar != null) {
-                        names.add(statusBar.getTransitionName());
-                        sharedElements.put(statusBar.getTransitionName(), statusBar);
-                    }
-                }
+    private SharedElementCallback mCallback;
 
-            }
-        }
-
-    };
+    private Context mContext;
 
 
         @Override
@@ -105,9 +73,48 @@ public class ArticleListActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
 
-        mActivity = this;
+            mContext = this;
 
-        setExitSharedElementCallback(mCallback);
+        mActivity = this;
+            if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+        mCallback = new SharedElementCallback() {
+                @Override
+                public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                    if (mReenterState != null) {
+                        int startPosition = mReenterState.getInt(EXTRA_START_POSITION);
+                        int currentPosition = mReenterState.getInt(EXTRA_CURRENT_POSITION);
+                        if (startPosition != currentPosition) {
+                            String newTransitionName = SHARED_ELEMENT_TRANSTION_PREFIX + currentPosition;
+                            View newSharedElement = mRecyclerView.findViewWithTag(newTransitionName);
+                            if (newSharedElement != null) {
+                                names.clear();
+                                names.add(newTransitionName);
+                                sharedElements.clear();
+                                sharedElements.put(newTransitionName, newSharedElement);
+                            }
+                            mReenterState = null;
+                        }
+                        else {
+                            // If mTmpReenterState is null, then the activity is exiting.
+                            View navigationBar = findViewById(android.R.id.navigationBarBackground);
+                            View statusBar = findViewById(android.R.id.statusBarBackground);
+                            if (navigationBar != null) {
+                                names.add(navigationBar.getTransitionName());
+                                sharedElements.put(navigationBar.getTransitionName(), navigationBar);
+                            }
+                            if (statusBar != null) {
+                                names.add(statusBar.getTransitionName());
+                                sharedElements.put(statusBar.getTransitionName(), statusBar);
+                            }
+                        }
+
+                    }
+                }
+            };
+                setExitSharedElementCallback(mCallback);
+
+            };
+
 
 
         // TODO - Probably want to do something like this in the detail activity, except enabled = true
@@ -181,9 +188,12 @@ public class ArticleListActivity extends AppCompatActivity implements
     private BroadcastReceiver mRefreshingReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d(TAG, "onReceive, broadcast receiver");
             if (UpdaterService.BROADCAST_ACTION_STATE_CHANGE.equals(intent.getAction())) {
                 mIsRefreshing = intent.getBooleanExtra(UpdaterService.EXTRA_REFRESHING, false);
                 updateRefreshingUI();
+            } else if (UpdaterService.BROADCAST_NO_NETWORK.equals(intent.getAction())) {
+                Toast.makeText(mContext, "No Network", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -237,12 +247,17 @@ public class ArticleListActivity extends AppCompatActivity implements
                     @Override
                     public void onClick(View view) {
                         mPosition = vh.getAdapterPosition();
-                        Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
-                        Log.d(TAG, "Running transition with bundle");
                         Intent intent = new Intent(Intent.ACTION_VIEW,ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition())));
                         intent.putExtra(EXTRA_START_POSITION, mPosition);
+                        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+                            Bundle bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(mActivity, vh.thumbnailView, vh.thumbnailView.getTransitionName()).toBundle();
+                            startActivity(intent, bundle);
+                            Log.d(TAG, "Running transition with bundle");
+                        }
+                        else {
+                            startActivity(intent);
+                        }
 
-                        startActivity(intent, bundle);
                     }
                 });
             return vh;

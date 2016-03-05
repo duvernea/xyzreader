@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -137,7 +138,10 @@ public class ArticleDetailFragment extends Fragment implements
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
 
         mPhotoView = (DynamicHeightNetworkImageView) mRootView.findViewById(R.id.photo);
-        mPhotoView.setTransitionName(ArticleListActivity.SHARED_ELEMENT_TRANSTION_PREFIX + mPosition);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mPhotoView.setTransitionName(ArticleListActivity.SHARED_ELEMENT_TRANSTION_PREFIX + mPosition);
+        }
         //mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
