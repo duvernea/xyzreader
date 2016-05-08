@@ -1,7 +1,7 @@
 #xyzreader 
 ## Project 5 ("Make Your App Material") of the Udacity Android Developer Nanodegree
 
-Transformed the user experience os a news reading app using Material Design principles. This includes consistent and meaningful use of Material Design UI components, fonts, color, motion, and surfaces.
+Transformed the user experience of a news reading app using Material Design principles. This includes consistent and meaningful use of Material Design UI components, fonts, color, motion, and surfaces.
 
 Installation
 ------------
@@ -13,7 +13,7 @@ Pre-requisites
 * Android SDK 16 or Higher
 * Build Tools version 23.0.1
 * Android Support AppCompat 23.1.0
-* Android Support CardView 23.1.1
+* Android Support CardView 23.1.0
 * Android Support Design 23.1.0
 * Android Support Palette 23.1.0
 * Android Support RecyclerView 23.1.0
